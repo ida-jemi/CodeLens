@@ -7,6 +7,7 @@ import userRoutes from "./modules/user/routes.js";
 import codeforcesRoutes from "./modules/codeforces/routes.js";
 import aiRoutes from "./modules/ai/routes.js";
 import githubRoutes from "./modules/github/routes.js";
+import contestRoutes from "./modules/contests/routes.js";
 import { globalLimiter, apiLimiter } from "./middlewares/rateLimiter.js";
 
 const app = express();
@@ -61,6 +62,7 @@ app.use("/api/user",       userRoutes);
 app.use("/api/codeforces", codeforcesRoutes);
 app.use("/api/ai",         aiRoutes);
 app.use("/api/github",     githubRoutes);
+app.use("/api/contests",   contestRoutes);
 
 // ── 404 catch-all ─────────────────────────────────────────────────────────────
 app.use((req, res) => {

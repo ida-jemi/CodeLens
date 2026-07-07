@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import ContestReminderBell from "../contests/ContestReminderBell";
 
 // ─── Mega Menu Data  ───────────────────────────────────────────────
 const MEGA_MENU_ITEMS = [
@@ -512,6 +513,10 @@ export default function Navbar() {
             </>
           ) : (
             <>
+
+              {/* Contest reminder bell — badge shows reminders due in <24h */}
+              <ContestReminderBell />
+              
               {/* User identity chip */}
               <div className="flex items-center gap-2 pl-3 border-l border-zinc-200">
                 <span className="w-7 h-7 flex items-center justify-center bg-black text-white font-bold text-xs rounded-[2px] flex-shrink-0">

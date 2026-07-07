@@ -1,5 +1,6 @@
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
+import ContestReminderNotifier from "../components/shared/ContestReminderNotifier";
 
 export default function MainLayout({ children }) {
   return (
@@ -9,6 +10,7 @@ export default function MainLayout({ children }) {
         {children}
       </main>
       <Footer />
+      <ContestReminderNotifier />
     </div>
   );
 }

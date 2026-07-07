@@ -1,4 +1,5 @@
 import { useState } from "react";
+import UpcomingContestsList from "../components/contests/UpcomingContestsList";
 
 export default function ContestCodeforcesPage() {
   const [selectedDivision, setSelectedDivision] = useState("all");
@@ -75,24 +76,13 @@ export default function ContestCodeforcesPage() {
         </div>
       </section>
 
-      {/* Filter Section */}
-      <section className="w-full border-b-4 border-black px-4 sm:px-6 md:px-8 py-8 bg-gray-50">
+      {/* Upcoming Contests Tracker — live data from Codeforces, cached hourly */}
+      <section className="w-full border-b-4 border-black px-4 sm:px-6 md:px-8 py-12 sm:py-16">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap gap-3">
-            {["all", "Div. 1", "Div. 2", "Div. 3", "Div. 4", "Educational", "Global"].map((div) => (
-              <button
-                key={div}
-                onClick={() => setSelectedDivision(div)}
-                className={`px-6 py-3 border-4 border-black font-black text-sm uppercase tracking-widest transition-all ${
-                  selectedDivision === div
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-black hover:bg-blue-600 hover:text-white"
-                }`}
-              >
-                {div}
-              </button>
-            ))}
-          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-8 sm:mb-12">
+            Upcoming Contests
+          </h2>
+          <UpcomingContestsList />
         </div>
       </section>
 
