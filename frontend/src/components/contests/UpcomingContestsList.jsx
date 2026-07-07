@@ -17,8 +17,9 @@ function formatStartTime(startTimeSeconds) {
 }
 
 function formatDuration(durationSeconds) {
-  const hours = Math.floor(durationSeconds / 3600);
-  const minutes = Math.round((durationSeconds % 3600) / 60);
+  const totalMinutes = Math.round(durationSeconds / 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
   return minutes ? `${hours}h ${minutes}m` : `${hours}h`;
 }
 

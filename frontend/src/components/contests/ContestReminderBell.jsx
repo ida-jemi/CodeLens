@@ -20,9 +20,10 @@ export default function ContestReminderBell() {
         const { data } = await getMyActiveReminders();
         if (cancelled) return;
         const now = Date.now();
-        const dueSoon = (data.data || []).filter(
-          (c) => c.startTimeSeconds * 1000 - now < DUE_SOON_WINDOW_MS
-        );
+        const dueSoon = (data.data || []).filter((c) => {
+          const msUntilStart = c.startTimeSeconds * 1000 - now;
+          return msUntilStart > 0 && msUntilStart < DUE_SOON_WINDOW_MS;
+        });
         setDueSoonCount(dueSoon.length);
       } catch {
         // Silent
