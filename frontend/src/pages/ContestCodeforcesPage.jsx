@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { Trophy, CheckCircle2, Zap, BarChart3 } from "lucide-react";
+import UpcomingContestsList from "../components/contests/UpcomingContestsList";
 
 export default function ContestCodeforcesPage() {
-  const [selectedDivision, setSelectedDivision] = useState("all");
-
   const contestSolutions = [
     {
       id: 1,
@@ -36,11 +35,11 @@ export default function ContestCodeforcesPage() {
   return (
     <div className="w-full min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="w-full border-b-4 border-black px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 bg-gradient-to-br from-blue-50 to-white">
+      <section className="w-full border-b-4 border-black px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-6 sm:space-y-8">
             <div className="inline-flex items-center gap-3 border-4 border-black bg-blue-600 text-white px-6 py-3">
-              <span className="text-2xl">🔵</span>
+              <Trophy size={22} strokeWidth={2.5} />
               <span className="font-black text-sm sm:text-base uppercase tracking-widest">
                 Contest Arsenal
               </span>
@@ -75,28 +74,17 @@ export default function ContestCodeforcesPage() {
         </div>
       </section>
 
-      {/* Filter Section */}
-      <section className="w-full border-b-4 border-black px-4 sm:px-6 md:px-8 py-8 bg-gray-50">
+      {/* Upcoming Contests Tracker — live data from Codeforces, cached hourly */}
+      <section className="w-full border-b-4 border-black px-4 sm:px-6 md:px-8 py-12 sm:py-16">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap gap-3">
-            {["all", "Div. 1", "Div. 2", "Div. 3", "Div. 4", "Educational", "Global"].map((div) => (
-              <button
-                key={div}
-                onClick={() => setSelectedDivision(div)}
-                className={`px-6 py-3 border-4 border-black font-black text-sm uppercase tracking-widest transition-all ${
-                  selectedDivision === div
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-black hover:bg-blue-600 hover:text-white"
-                }`}
-              >
-                {div}
-              </button>
-            ))}
-          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-8 sm:mb-12">
+            Upcoming Contests
+          </h2>
+          <UpcomingContestsList />
         </div>
       </section>
 
-      {/* Contest Solutions Grid */}
+      {/* Contest Solutions Grid (past-contest editorial archive — static placeholder) */}
       <section className="w-full px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-8 sm:mb-12">
@@ -168,21 +156,21 @@ export default function ContestCodeforcesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="border-4 border-black bg-white p-6">
-              <div className="text-4xl font-black mb-4">✓</div>
+              <CheckCircle2 size={36} strokeWidth={2.5} className="mb-4 text-black" />
               <h3 className="text-xl font-black uppercase tracking-tight mb-3">Detailed Editorials</h3>
               <p className="text-sm font-bold leading-relaxed text-gray-700">
                 Step-by-step explanations with multiple approaches and optimizations
               </p>
             </div>
             <div className="border-4 border-black bg-white p-6">
-              <div className="text-4xl font-black mb-4">⚡</div>
+              <Zap size={36} strokeWidth={2.5} className="mb-4 text-black" />
               <h3 className="text-xl font-black uppercase tracking-tight mb-3">Code Templates</h3>
               <p className="text-sm font-bold leading-relaxed text-gray-700">
                 Clean, production-ready code in C++, Python, and Java
               </p>
             </div>
             <div className="border-4 border-black bg-white p-6">
-              <div className="text-4xl font-black mb-4">📊</div>
+              <BarChart3 size={36} strokeWidth={2.5} className="mb-4 text-black" />
               <h3 className="text-xl font-black uppercase tracking-tight mb-3">Complexity Analysis</h3>
               <p className="text-sm font-bold leading-relaxed text-gray-700">
                 Time and space complexity breakdown for every solution

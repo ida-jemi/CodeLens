@@ -5,6 +5,7 @@ import { useCodeforces } from "../hooks/useCodeforces";
 import ConnectBanner from "../components/codeforces/ConnectBanner";
 import VerifyModal from "../components/codeforces/VerifyModal";
 import DashboardExecutiveSummary from "../components/dashboard/DashboardExecutiveSummary";
+import UpcomingContestsWidget from "../components/dashboard/UpcomingContestsWidget";
 import LoaderSwitcher from "../components/shared/loaders/LoaderSwitcher";
 
 export default function DashboardPage() {
@@ -131,6 +132,11 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Upcoming Contests Widget */}
+        <div className="mb-12 sm:mb-16">
+          <UpcomingContestsWidget />
         </div>
 
         {/* Connect Banner — only shown if CF is not connected */}
