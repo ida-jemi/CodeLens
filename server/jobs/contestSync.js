@@ -36,7 +36,12 @@ const acquireLock = async (jobName, ttlMs) => {
   }
 };
 
-export const startContestSyncJob = () => {
+export const startContestSyncJob = async () => {
+  // Ensure the unique index on SyncLock.jobName is built before any lock
+  // acquisition happens — otherwise the very first concurrent upsert race
+  // (right after server boot) isn't guaranteed to be exclusive.
+  await SyncLock.init();
+
   const runSync = async () => {
     const acquired = await acquireLock(JOB_NAME, LOCK_TTL_MS);
     if (!acquired) {
