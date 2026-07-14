@@ -12,6 +12,7 @@ import mongoose from "mongoose";
 const SyncLockSchema = new mongoose.Schema(
   {
     jobName: { type: String, unique: true, required: true },
+    ownerId: { type: String, required: true },
     lockedUntil: { type: Date, required: true },
   },
   { timestamps: true }
