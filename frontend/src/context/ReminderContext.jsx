@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import { getMyActiveReminders } from "../services/contestService";
 
@@ -14,12 +14,12 @@ const POLL_INTERVAL_MS = 30_000; // fast enough for the notifier's reminder wind
 export function ReminderProvider({ children }) {
   const { isAuthenticated } = useAuth();
   const [reminders, setReminders] = useState([]);
-  const cancelledRef = useRef(false);
 
+  // Manual refetch (exposed via context) is independent of any single
+  // effect's cancellation scope, so it's safe for it to always write.
   const poll = useCallback(async () => {
     try {
       const { data } = await getMyActiveReminders();
-      if (cancelledRef.current) return;
       setReminders(data.data || []);
     } catch {
       // Silent — consumers just don't get an update this cycle.
@@ -27,20 +27,33 @@ export function ReminderProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    cancelledRef.current = false;
+    // Scoped to THIS effect invocation only. Unlike a shared ref, this
+    // cannot be reset by a later effect run — once cleanup sets it, any
+    // still-in-flight response from THIS session is permanently ignored,
+    // even if a new (e.g. unauthenticated) effect run has already started.
+    let cancelled = false;
 
     if (!isAuthenticated) {
       setReminders([]);
       return;
     }
 
-    poll();
-    const id = setInterval(poll, POLL_INTERVAL_MS);
+    const safePoll = async () => {
+      try {
+        const { data } = await getMyActiveReminders();
+        if (!cancelled) setReminders(data.data || []);
+      } catch {
+        // Silent — consumers just don't get an update this cycle.
+      }
+    };
+
+    safePoll();
+    const id = setInterval(safePoll, POLL_INTERVAL_MS);
     return () => {
-      cancelledRef.current = true;
+      cancelled = true;
       clearInterval(id);
     };
-  }, [isAuthenticated, poll]);
+  }, [isAuthenticated]);
 
   return (
     <ReminderContext.Provider value={{ reminders, refetch: poll }}>

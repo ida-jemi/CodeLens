@@ -5,12 +5,6 @@ import { useReminders } from "../../context/ReminderContext";
 
 const DUE_SOON_WINDOW_MS = 24 * 60 * 60 * 1000; // badge counts contests starting in <24h
 
-/**
- * Small navbar bell badge — shows how many reminders the user has set for
- * contests starting within the next 24 hours. Links through to the full
- * tracker page. Data comes from the shared ReminderProvider (see
- * ReminderContext.jsx) rather than its own polling loop.
- */
 export default function ContestReminderBell() {
   const { isAuthenticated } = useAuth();
   const { reminders } = useReminders();
@@ -18,9 +12,10 @@ export default function ContestReminderBell() {
   if (!isAuthenticated) return null;
 
   const now = Date.now();
-  const dueSoonCount = reminders.filter(
-    (c) => c.startTimeSeconds * 1000 - now < DUE_SOON_WINDOW_MS
-  ).length;
+  const dueSoonCount = reminders.filter((c) => {
+    const msUntilStart = c.startTimeSeconds * 1000 - now;
+    return msUntilStart > 0 && msUntilStart < DUE_SOON_WINDOW_MS;
+  }).length;
 
   return (
     <Link
