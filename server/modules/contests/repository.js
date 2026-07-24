@@ -19,7 +19,7 @@ class ContestRepository {
   static async getUpcomingContests(platform = "codeforces") {
     return Contest.find({
       platform,
-      phase: { $in: ["BEFORE", "CODING"] },
+      phase: { $in: ["BEFORE", "CODING", "PENDING_SYSTEM_TEST", "SYSTEM_TEST"] },
     })
       .sort({ startTimeSeconds: 1 })
       .lean();
@@ -27,6 +27,16 @@ class ContestRepository {
 
   static async findByContestId(platform, contestId) {
     return Contest.findOne({ platform, contestId }).lean();
+  }
+
+  static async getNonFinishedContestIds(platform = "codeforces") {
+    const docs = await Contest.find({
+      platform,
+      phase: { $ne: "FINISHED" },
+    })
+      .select("contestId -_id")
+      .lean();
+    return new Set(docs.map((d) => d.contestId));
   }
 
   static async addReminder(userId, platform, contestId) {
@@ -77,18 +87,18 @@ class ContestRepository {
   }
 
   static async pruneStaleReminders(platform = "codeforces") {
-    const finishedContestIds = await Contest.find({
+    const staleContestIds = await Contest.find({
       platform,
-      phase: "FINISHED",
+      phase: { $nin: ["BEFORE", "CODING"] },
     })
       .select("contestId -_id")
       .lean();
 
-    if (!finishedContestIds.length) return;
+    if (!staleContestIds.length) return;
 
     await ContestReminder.deleteMany({
       platform,
-      contestId: { $in: finishedContestIds.map((c) => c.contestId) },
+      contestId: { $in: staleContestIds.map((c) => c.contestId) },
     });
   }
 }

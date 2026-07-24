@@ -5,7 +5,19 @@ import { useAuth } from "../../context/AuthContext";
 import { useContests } from "../../hooks/useContests";
 import ContestCountdown from "./ContestCountdown";
 
-const DIVISIONS = ["all", "Div. 1", "Div. 2", "Div. 3", "Div. 4", "Educational", "Global"];
+const DIVISIONS = [
+  "all",
+  "Div. 1",
+  "Div. 2",
+  "Div. 1 + 2",
+  "Div. 3",
+  "Div. 4",
+  "Educational",
+  "Global",
+  "Kotlin Heroes",
+  "ICPC",
+  "Other",
+];
 
 function formatStartTime(startTimeSeconds) {
   return new Date(startTimeSeconds * 1000).toLocaleString(undefined, {
@@ -135,6 +147,7 @@ export default function UpcomingContestsList({ compact = false, limit = 3 }) {
               <ContestCountdown
                 msUntilStart={contest.msUntilStart}
                 isRunning={contest.isRunning}
+                isTesting={contest.isTesting}
                 compact={compact}
               />
             </div>

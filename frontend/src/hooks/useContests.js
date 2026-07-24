@@ -77,11 +77,12 @@ export const useContests = () => {
   const contestsWithMeta = useMemo(() => {
     return contests.map((contest) => {
       const startMs = contest.startTimeSeconds * 1000;
-      const endMs = startMs + contest.durationSeconds * 1000;
+      const isTesting = ["PENDING_SYSTEM_TEST", "SYSTEM_TEST"].includes(contest.phase);
       return {
         ...contest,
         hasReminder: reminderIds.includes(contest.contestId),
-        isRunning: now >= startMs && now < endMs,
+        isRunning: contest.phase === "CODING" && now >= startMs,
+        isTesting,
         msUntilStart: startMs - now,
       };
     });
