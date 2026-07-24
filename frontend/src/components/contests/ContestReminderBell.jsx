@@ -1,49 +1,26 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bell } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { getMyActiveReminders } from "../../services/contestService";
+import { useReminders } from "../../context/ReminderContext";
 
-const POLL_INTERVAL_MS = 60_000; // 1 minute — reminders don't need second-level freshness
 const DUE_SOON_WINDOW_MS = 24 * 60 * 60 * 1000; // badge counts contests starting in <24h
 
 /**
  * Small navbar bell badge — shows how many reminders the user has set for
  * contests starting within the next 24 hours. Links through to the full
- * tracker page. Renders nothing while there's nothing to show.
+ * tracker page. Data comes from the shared ReminderProvider (see
+ * ReminderContext.jsx) rather than its own polling loop.
  */
 export default function ContestReminderBell() {
   const { isAuthenticated } = useAuth();
-  const [dueSoonCount, setDueSoonCount] = useState(0);
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    let cancelled = false;
-
-    const poll = async () => {
-      try {
-        const { data } = await getMyActiveReminders();
-        if (cancelled) return;
-        const now = Date.now();
-        const dueSoon = (data.data || []).filter(
-          (c) => c.startTimeSeconds * 1000 - now < DUE_SOON_WINDOW_MS
-        );
-        setDueSoonCount(dueSoon.length);
-      } catch {
-        // Silent — the bell just won't update this cycle.
-      }
-    };
-
-    poll();
-    const id = setInterval(poll, POLL_INTERVAL_MS);
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
-  }, [isAuthenticated]);
+  const { reminders } = useReminders();
 
   if (!isAuthenticated) return null;
+
+  const now = Date.now();
+  const dueSoonCount = reminders.filter(
+    (c) => c.startTimeSeconds * 1000 - now < DUE_SOON_WINDOW_MS
+  ).length;
 
   return (
     <Link

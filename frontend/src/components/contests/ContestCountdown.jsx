@@ -1,12 +1,12 @@
 import { Radio } from "lucide-react";
 
 /**
- * Renders a live "dd:hh:mm:ss" style countdown, or a running/finished label.
- * `msUntilStart` and `isRunning` come from `useContests` and are recomputed
- * every second from a single shared clock (see the hook) — this component
- * just formats them, it doesn't run its own timer.
+ * Renders a live "dd:hh:mm:ss" style countdown, or a running/testing/finished
+ * label. `msUntilStart`, `isRunning`, and `isTesting` come from `useContests`
+ * and are derived from the backend's authoritative `phase` field — this
+ * component just formats them, it doesn't decide run state itself.
  */
-export default function ContestCountdown({ msUntilStart, isRunning, compact = false }) {
+export default function ContestCountdown({ msUntilStart, isRunning, isTesting, compact = false }) {
   if (isRunning) {
     return (
       <span
@@ -20,9 +20,20 @@ export default function ContestCountdown({ msUntilStart, isRunning, compact = fa
     );
   }
 
-  // msUntilStart <= 0 with isRunning false means "now" is past both the start
-  // AND the end of the contest window — i.e. it has actually finished, not
-  // that it's about to start.
+  if (isTesting) {
+    return (
+      <span
+        className={`font-black text-amber-600 uppercase tracking-widest ${
+          compact ? "text-[10px]" : "text-sm"
+        }`}
+      >
+        System Testing
+      </span>
+    );
+  }
+
+  // msUntilStart <= 0 with isRunning/isTesting both false means the contest
+  // has actually finished, not that it's about to start.
   if (msUntilStart <= 0) {
     return (
       <span

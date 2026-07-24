@@ -2,6 +2,8 @@ import ApiError from "../../utils/ApiError.js";
 import ContestRepository from "./repository.js";
 import { cfGetContestList } from "../../utils/codeforcesApi.js";
 
+// NOTE: any value returned here must have a corresponding entry in
+// frontend/src/components/contests/UpcomingContestsList.jsx's DIVISIONS array.
 const parseDivision = (name = "") => {
   const n = name.toLowerCase();
   if (n.includes("div. 1") && n.includes("div. 2")) return "Div. 1 + 2";
@@ -30,21 +32,43 @@ const normalizeContest = (c) => ({
 });
 
 class ContestService {
-  static async syncCodeforcesContests() {
-    const contests = await cfGetContestList(false);
+  /**
+   * @param {Object} [deps] - injectable dependencies, for testing only.
+   *   Production callers should never need to pass this.
+   * @param {Function} [deps.fetchContests] - defaults to cfGetContestList.
+   */
+  static async syncCodeforcesContests({ fetchContests = cfGetContestList } = {}) {
+    const contests = await fetchContests(false);
 
-    const relevant = contests.filter((c) =>
-      ["BEFORE", "CODING", "FINISHED"].includes(c.phase)
+    // Every phase we care about tracking locally. Testing phases are
+    // included so a cached BEFORE/CODING document is never left stranded —
+    // it must be able to transition all the way to FINISHED.
+    const trackedPhases = ["BEFORE", "CODING", "PENDING_SYSTEM_TEST", "SYSTEM_TEST", "FINISHED"];
+    const relevant = contests.filter((c) => trackedPhases.includes(c.phase));
+
+    const activeOrTesting = relevant.filter((c) => c.phase !== "FINISHED");
+
+    // Reconciliation set: any contest we already have cached as non-finished
+    // MUST be updated to whatever the API now reports, even if it has now
+    // moved to FINISHED and would otherwise fall outside the display window
+    // below. This is what prevents a stranded stale document.
+    const existingNonFinishedIds = await ContestRepository.getNonFinishedContestIds("codeforces");
+    const reconciledFinished = relevant.filter(
+      (c) => c.phase === "FINISHED" && existingNonFinishedIds.has(c.id)
     );
 
-    const finished = relevant
+    // Separate retention concern: how many *newly seen* finished contests to
+    // persist for display purposes, independent of reconciliation above.
+    const recentFinished = relevant
       .filter((c) => c.phase === "FINISHED")
       .sort((a, b) => b.startTimeSeconds - a.startTimeSeconds)
       .slice(0, 20);
 
-    const upcomingOrRunning = relevant.filter((c) => c.phase !== "FINISHED");
+    const finishedById = new Map(
+      [...reconciledFinished, ...recentFinished].map((c) => [c.id, c])
+    );
 
-    const docs = [...upcomingOrRunning, ...finished].map(normalizeContest);
+    const docs = [...activeOrTesting, ...finishedById.values()].map(normalizeContest);
 
     await ContestRepository.bulkUpsertContests(docs);
     await ContestRepository.pruneStaleReminders("codeforces");
