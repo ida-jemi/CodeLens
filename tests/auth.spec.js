@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Authentication Flows', () => {
   test('should successfully log in with mocked API response', async ({ page }) => {
     // 1. Intercept the login API request and mock a successful response
-    await page.route('**/api/auth/login', async (route) => {
+    await page.route('**/auth/login', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -23,7 +23,7 @@ test.describe('Authentication Flows', () => {
     });
 
     // 2. Intercept the user profile check (which often runs after login or on dashboard load)
-    await page.route('**/api/auth/me', async (route) => {
+    await page.route('**/auth/me', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -60,7 +60,7 @@ test.describe('Authentication Flows', () => {
 
   test('should show error message on failed login', async ({ page }) => {
     // Mock a failed response (e.g. wrong password)
-    await page.route('**/api/auth/login', async (route) => {
+    await page.route('**/auth/login', async (route) => {
       await route.fulfill({
         status: 401,
         contentType: 'application/json',
