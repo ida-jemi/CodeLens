@@ -15,3 +15,10 @@ project_deep_dive.md
 resume_and_interview.md
 auth.md
 gitubAuthCrationJourney.md
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
