@@ -22,20 +22,14 @@ test.describe('Authentication Flows', () => {
       });
     });
 
-    // 2. Intercept the user profile check (which often runs after login or on dashboard load)
+    // 2. Intercept the user profile check on app startup
     await page.route('**/auth/me', async (route) => {
       await route.fulfill({
-        status: 200,
+        status: 401,
         contentType: 'application/json',
         body: JSON.stringify({
-          success: true,
-          data: {
-            user: {
-              id: 'mock-user-123',
-              email: 'test@example.com',
-              name: 'Test User'
-            }
-          }
+          success: false,
+          message: 'Not logged in'
         }),
       });
     });
