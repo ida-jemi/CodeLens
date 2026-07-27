@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1785148024975" clover="3.2.0">
+  <project timestamp="1785148024975" name="All files">
+    <metrics statements="38" coveredstatements="35" conditionals="14" coveredconditionals="10" methods="13" coveredmethods="12" elements="65" coveredelements="57" complexity="0" loc="38" ncloc="38" packages="2" files="2" classes="2"/>
+    <package name="context">
+      <metrics statements="27" coveredstatements="24" conditionals="10" coveredconditionals="6" methods="6" coveredmethods="5"/>
+      <file name="ReminderContext.jsx" path="/Users/kunalverma/Developer/GSSOC26/CodeLens/frontend/src/context/ReminderContext.jsx">
+        <metrics statements="27" coveredstatements="24" conditionals="10" coveredconditionals="6" methods="6" coveredmethods="5"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="15" count="14" type="stmt"/>
+        <line num="16" count="14" type="stmt"/>
+        <line num="20" count="14" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="29" count="14" type="stmt"/>
+        <line num="34" count="6" type="stmt"/>
+        <line num="36" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="41" count="4" type="stmt"/>
+        <line num="42" count="8" type="stmt"/>
+        <line num="43" count="8" type="stmt"/>
+        <line num="44" count="7" type="cond" truecount="2" falsecount="2"/>
+        <line num="50" count="4" type="stmt"/>
+        <line num="51" count="4" type="stmt"/>
+        <line num="52" count="4" type="stmt"/>
+        <line num="53" count="4" type="stmt"/>
+        <line num="54" count="4" type="stmt"/>
+        <line num="58" count="14" type="stmt"/>
+        <line num="66" count="17" type="stmt"/>
+        <line num="67" count="17" type="cond" truecount="2" falsecount="0"/>
+        <line num="68" count="2" type="stmt"/>
+        <line num="70" count="14" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils">
+      <metrics statements="11" coveredstatements="11" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="7"/>
+      <file name="reminderBroadcast.js" path="/Users/kunalverma/Developer/GSSOC26/CodeLens/frontend/src/utils/reminderBroadcast.js">
+        <metrics statements="11" coveredstatements="11" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="7"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="11" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="18" count="6" type="stmt"/>
+        <line num="20" count="6" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="23" count="4" type="stmt"/>
+        <line num="24" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="4" type="stmt"/>
+        <line num="27" count="4" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
