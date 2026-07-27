@@ -1,0 +1,23 @@
+{
+  "name": "codelens",
+  "version": "1.0.0",
+  "description": "> **Stop guessing. Start growing.**   > CodeLens aggregates your GitHub, LeetCode, and Codeforces data into a single AI-powered command center that tells you exactly what to learn next.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunalverma2512/CodeLens.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kunalverma2512/CodeLens/issues"
+  },
+  "homepage": "https://github.com/kunalverma2512/CodeLens#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.0",
+    "@types/node": "^26.1.1"
+  }
+}
