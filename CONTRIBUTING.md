@@ -26,5 +26,35 @@ We adhere to strict branch naming conventions:
 3. Draft a thorough PR description mapping your solution to the original GitHub issue.
 4. Request review from a core maintainer.
 
-## 4. Issues & Feedback
+## 4. Surviving the CI/CD Pipeline (How to Avoid PR Failures)
+CodeLens uses strict automated checks to ensure top-tier quality, security, and performance. Before opening a PR, follow this checklist to guarantee a "green" build:
+
+### 1. The Pre-Push Checklist (Quality & Tests)
+Before you type `git commit`, always run:
+- `npm run lint` (in both `frontend` and `server` if you modified both). Fix any warnings or errors.
+- `npm test` (if applicable). Make sure no unit tests are broken.
+- **Coverage:** If you add a new feature, try to add a test. Significant drops in code coverage (Codecov) will flag your PR.
+
+### 2. Conventional Commits (Semantic Versioning)
+We use automated Semantic Versioning. You **must** prefix your commits and PR titles so our bots know how to generate the Changelog:
+- `feat: [message]` (For new features)
+- `fix: [message]` (For bug fixes)
+- `docs:`, `chore:`, `refactor:`, `test:`, or `style:` (For other updates)
+- *Example:* `feat: add CodeChef integration`
+
+### 3. Playwright E2E Tests (UI & API Contracts)
+If you change the text of a core button (e.g., changing "LOGIN" to "SIGN IN") or alter a route, the End-to-End browser bots might fail to find the element.
+- If you modify core UI, run the Playwright tests locally or check the `tests/` directory to update the selectors to match your new UI.
+
+### 4. Lighthouse Performance & SEO
+Google Lighthouse audits every PR. We enforce a strict **70% minimum score**.
+- **Images:** Compress images before committing. Do not upload massive assets.
+- **Performance:** Avoid heavy, blocking JavaScript loops on the main thread.
+- **Accessibility:** Ensure buttons have text or aria-labels, and contrast is high.
+
+### 5. CodeQL Security
+- Never hardcode API keys, secrets, or passwords.
+- Always sanitize user inputs on the backend to avoid NoSQL injection.
+
+## 5. Issues & Feedback
 If you locate a bug, please check the existing issue tracker before creating a duplicate. For new features, open a discussion thread outlining the architectural approach before submitting large PRs.
