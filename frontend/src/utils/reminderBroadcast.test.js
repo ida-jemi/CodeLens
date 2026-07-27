@@ -54,7 +54,7 @@ describe("createReminderChannel", () => {
 
   it("falls back to safe no-ops when BroadcastChannel is unavailable", () => {
     const original = globalThis.BroadcastChannel;
-    // eslint-disable-next-line no-undefined
+     
     globalThis.BroadcastChannel = undefined;
 
     try {
