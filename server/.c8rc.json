@@ -1,0 +1,9 @@
+{
+  "reporter": ["text", "lcov", "html"],
+  "exclude": [
+    "tests/**",
+    "node_modules/**",
+    "eslint.config.js"
+  ],
+  "all": true
+}
