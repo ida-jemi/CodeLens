@@ -11,7 +11,7 @@ export default function ContestReminderBell() {
 
   if (!isAuthenticated) return null;
 
-  const now = Date.now();
+  const now = Date.now(); // eslint-disable-line
   const dueSoonCount = reminders.filter((c) => {
     const msUntilStart = c.startTimeSeconds * 1000 - now;
     return msUntilStart > 0 && msUntilStart < DUE_SOON_WINDOW_MS;

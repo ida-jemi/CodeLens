@@ -82,19 +82,19 @@ class GitHubService {
   }
 
   /** ── Compute derived analytics scores ───────────────────────────────── */
-  static #computeMetrics({ repos, contributions, events, prs, issues }) {
+  static #computeMetrics({ repos, contributions, _events, prs, _issues }) {
     // --- Consistency score (0-100): based on active days in last 52 weeks
     const days = contributions?.contributionCalendar?.weeks?.flatMap(w => w.contributionDays) || [];
     const activeDays = days.filter(d => d.contributionCount > 0).length;
     const consistencyScore = Math.min(100, Math.round((activeDays / 365) * 100));
 
     // --- Streak (longest consecutive active days)
-    let streak = 0, best = 0, cur = 0;
+    let best = 0, cur = 0;
     for (const d of days) {
       cur = d.contributionCount > 0 ? cur + 1 : 0;
       if (cur > best) best = cur;
     }
-    streak = best;
+    const streak = best;
 
     // --- Collaboration score: PRs + reviews + issues opened relative to commits
     const totalCommits = contributions?.totalCommitContributions || 0;

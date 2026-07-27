@@ -288,6 +288,13 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   // ── Close menu on Escape key, restore focus to hamburger ────────────────
+  const toggleMenu = () => setIsMenuOpen((v) => !v);
+  const closeMenu  = useCallback(() => {
+    setIsMenuOpen(false);
+    setMobileMegaOpen(false);
+    setMegaOpen(false);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && isMenuOpen) {
@@ -311,12 +318,6 @@ export default function Navbar() {
     navigate("/");
     setIsMenuOpen(false);
   };
-  const toggleMenu = () => setIsMenuOpen((v) => !v);
-  const closeMenu  = useCallback(() => {
-    setIsMenuOpen(false);
-    setMobileMegaOpen(false);
-    setMegaOpen(false);
-  }, []);
 
   const handleMegaMouseEnter = () => {
     clearTimeout(megaLeaveTimer.current);
@@ -582,7 +583,7 @@ export default function Navbar() {
       {isMenuOpen && (
         <div
           className="lg:hidden w-full bg-white border-t border-zinc-100 flex flex-col min-h-0"
-          style={{ maxHeight: "calc(100vh - 3.5rem)", maxHeight: "calc(100svh - 3.5rem)", overflow: "hidden" }}
+          style={{ maxHeight: "calc(100svh - 3.5rem)", overflow: "hidden" }}
         >
           {/* Scrollable area */}
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
