@@ -14,7 +14,15 @@ const ContestSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    contestId: { type: Number, required: true, index: true },
+    // NOTE: no standalone index here. Every current query pattern that
+    // filters on contestId also filters on platform in the same query
+    // (see repository.js: findByContestId, bulkUpsertContests' upsert
+    // filter) — the compound unique index below already fully covers
+    // those lookups via its leftmost-prefix behavior. A separate index
+    // on contestId alone would be redundant and only add write overhead.
+    // See server/modules/contests/INDEXES.md for the full rationale and
+    // how to safely apply this in an existing production database.
+    contestId: { type: Number, required: true },
     name: { type: String, required: true },
     type: { type: String, default: "CF" },
     phase: { type: String, required: true, index: true },
