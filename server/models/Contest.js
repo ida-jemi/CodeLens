@@ -7,21 +7,22 @@ import mongoose from "mongoose";
  */
 const ContestSchema = new mongoose.Schema(
   {
+    // NOTE: no standalone index on `platform` here. Every current query
+    // filters on platform ALONGSIDE contestId or phase in the same query
+    // (see repository.js) — never on platform alone. The compound unique
+    // index below already covers platform via its leftmost-prefix
+    // behavior for any query that touches it, so a separate index here
+    // would be redundant. See INDEXES.md for the full rationale.
     platform: {
       type: String,
       enum: ["codeforces"],
       default: "codeforces",
       required: true,
-      index: true,
     },
-    // NOTE: no standalone index here. Every current query pattern that
-    // filters on contestId also filters on platform in the same query
-    // (see repository.js: findByContestId, bulkUpsertContests' upsert
-    // filter) — the compound unique index below already fully covers
-    // those lookups via its leftmost-prefix behavior. A separate index
-    // on contestId alone would be redundant and only add write overhead.
-    // See server/modules/contests/INDEXES.md for the full rationale and
-    // how to safely apply this in an existing production database.
+    // NOTE: no standalone index here either, for the same reason — every
+    // query that filters on contestId also filters on platform in the
+    // same query (findByContestId, bulkUpsertContests' upsert filter),
+    // which the compound unique index below already fully covers.
     contestId: { type: Number, required: true },
     name: { type: String, required: true },
     type: { type: String, default: "CF" },

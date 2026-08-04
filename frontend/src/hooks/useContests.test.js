@@ -111,7 +111,8 @@ describe("useContests", () => {
     expect(result.current.contests[0]?.name).toBe("Fresh Data");
   });
 
-  it("does not apply a fetch response that resolves after unmount", async () => {
+  it("does not crash or warn when a fetch resolves after unmount (React 18 already no-ops post-unmount setState silently; the requestId guard's actual regression coverage is the stale-response race test above)", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     let resolveFetch;
     mockGetUpcomingCodeforcesContests.mockReturnValue(
       new Promise((resolve) => { resolveFetch = resolve; })
@@ -120,10 +121,11 @@ describe("useContests", () => {
     const { unmount } = renderHook(() => useContests());
     unmount();
 
-    // Should not throw / cause an act() warning even though state would
-    // otherwise be updated after unmount.
     await act(async () => {
       resolveFetch({ data: { data: [CONTEST_A] } });
     });
+
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });
