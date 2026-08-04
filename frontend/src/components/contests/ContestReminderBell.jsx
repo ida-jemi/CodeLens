@@ -1,17 +1,30 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bell } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useReminders } from "../../context/ReminderContext";
 
 const DUE_SOON_WINDOW_MS = 24 * 60 * 60 * 1000; // badge counts contests starting in <24h
+const NOW_REFRESH_INTERVAL_MS = 60_000; // due-soon badge only needs minute-level freshness
 
 export default function ContestReminderBell() {
   const { isAuthenticated } = useAuth();
   const { reminders } = useReminders();
 
+  // Date.now() is an impure call — it can't be invoked directly in the
+  // render body (react-hooks/purity). Reading it once via useState's lazy
+  // initializer, then refreshing on an interval, matches the same pattern
+  // already used for "now" elsewhere in this codebase (see useContests.js).
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), NOW_REFRESH_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  // All hooks above must run unconditionally before this early return.
   if (!isAuthenticated) return null;
 
-  const now = Date.now();
   const dueSoonCount = reminders.filter((c) => {
     const msUntilStart = c.startTimeSeconds * 1000 - now;
     return msUntilStart > 0 && msUntilStart < DUE_SOON_WINDOW_MS;
